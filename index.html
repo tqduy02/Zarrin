@@ -373,5 +373,204 @@
         </div>
       </div>
     </footer>
+    <script type="module">
+      import axios from "https://cdn.jsdelivr.net/npm/axios@1.7.7/+esm";
+
+      // --- API Setup ---
+      const api = axios.create({
+        baseURL: "http://localhost:4000",
+        timeout: 8000,
+        headers: { "Content-Type": "application/json" },
+      });
+
+      // --- Helpers ---
+      const $ = (s, r = document) => r.querySelector(s);
+      const fmtDate = (iso) =>
+        iso
+          ? new Date(iso).toLocaleDateString("en-GB", {
+              day: "2-digit",
+              month: "long",
+              year: "numeric",
+            })
+          : "";
+
+      function escapeHtml(str = "") {
+        return str.replace(
+          /[&<>"']/g,
+          (s) =>
+            ({
+              "&": "&amp;",
+              "<": "&lt;",
+              ">": "&gt;",
+              '"': "&quot;",
+              "'": "&#39;",
+            }[s])
+        );
+      }
+
+      // --- 1) Template chung ---
+      function tplCard(p, variant = "small") {
+        const isLarge = variant === "large";
+        return `
+    <div class="post-card ${isLarge ? "post-card-large" : ""}">
+      <div class="card-image">
+        <img src="${p.coverUrl}" alt="${escapeHtml(p.title)}" />
+      </div>
+      <div class="post-card-content">
+        <div class="post-meta">
+          <span class="post-category">${escapeHtml(p.category || "")}</span>
+          <span class="post-date">${fmtDate(p.date)}</span>
+        </div>
+        <h3 class="post-title">${escapeHtml(p.title)}</h3>
+        <p class="post-excerpt">${escapeHtml(p.excerpt || "")}</p>
+        ${
+          isLarge
+            ? `<a href="post.html?id=${p.id}" class="btn btn-secondary">Read More</a>`
+            : `<a href="post.html?id=${p.id}" class="post-read-more">Read more...</a>`
+        }
+      </div>
+    </div>`;
+      }
+
+      // --- 2) Render Functions ---
+      function renderHero(p) {
+        if (!p) return;
+        const hero = $(".hero");
+        if (!hero) return;
+        const h1 = hero.querySelector("h1");
+        const desc = hero.querySelector(".description");
+        const img = hero.querySelector(".hero-image img");
+        const link = hero.querySelector(".btn-light");
+        if (h1) h1.textContent = p.title;
+        if (desc) desc.textContent = p.excerpt || "";
+        if (img) {
+          img.src = p.coverUrl;
+          img.alt = p.title;
+        }
+        if (link) link.href = `post.html?id=${p.id}`;
+      }
+
+      function renderFeaturedCard(p) {
+        const card = $(".featured-card"); // Chọn .featured-card
+        if (!card || !p) return;
+
+        // Tìm các phần tử con bên trong
+        const img = card.querySelector(".card-image img");
+        const cat = card.querySelector(".post-category");
+        const date = card.querySelector(".post-date");
+        const title = card.querySelector(".post-title");
+        const excerpt = card.querySelector(".post-excerpt");
+        const btn = card.querySelector(".btn-secondary"); // Nút "Read More"
+
+        // Đổ dữ liệu vào
+        if (img) {
+          img.src = p.coverUrl;
+          img.alt = escapeHtml(p.title);
+        }
+        if (cat) cat.textContent = escapeHtml(p.category || "");
+        if (date) date.textContent = fmtDate(p.date);
+        if (title) title.textContent = escapeHtml(p.title);
+        if (excerpt) excerpt.textContent = escapeHtml(p.excerpt || "");
+        if (btn) btn.href = `post.html?id=${p.id}`;
+      }
+
+      function renderRecent(list = []) {
+        const wrap = $(".recent-posts-grid");
+        if (!wrap || !list.length) return;
+        const [first, ...rest] = list;
+        wrap.innerHTML = `
+    ${first ? tplCard(first, "large") : ""}
+    <div class="small-posts-row">
+      ${rest
+        .slice(0, 3)
+        .map((p) => tplCard(p, "small"))
+        .join("")}
+    </div>`;
+      }
+
+      function renderPopular(list = []) {
+        const grid = $(".popular-posts-grid");
+        if (!grid || !list.length) return;
+        grid.innerHTML = list
+          .slice(0, 6) // Lấy 6 bài
+          .map((p) => tplCard(p, "small"))
+          .join("");
+      }
+
+      // --- 3) Data Fetching Logic ---
+      async function getByIds(ids = []) {
+        const results = await Promise.all(
+          ids.map(async (id) => {
+            try {
+              const { data } = await api.get(`/posts/${id}`);
+              return data;
+            } catch {
+              return null;
+            }
+          })
+        );
+        return results.filter(Boolean);
+      }
+
+      // --- 4) Khởi động trang (đọc sections) ---
+      async function initIndex() {
+        let sections = null;
+        try {
+          // 1) Đọc /sections
+          const { data } = await api.get("/sections");
+          sections = data;
+        } catch (e) {
+          console.warn(
+            "Không đọc được /sections, chuyển qua chế độ tự động.",
+            e
+          );
+        }
+
+        // 2) HERO
+        if (sections?.hero) {
+          const post = await getByIds([sections.hero]).then((a) => a[0]);
+          renderHero(post);
+        } else {
+          const { data } = await api.get("/posts", {
+            params: { _sort: "date", _order: "desc", _limit: 1 },
+          });
+          renderHero(data[0]);
+        }
+
+        // 3) FEATURED
+        if (sections?.featured) {
+          const post = await getByIds([sections.featured]).then((a) => a[0]);
+          renderFeaturedCard(post);
+        } else {
+          const { data } = await api.get("/posts", {
+            params: { _sort: "date", _order: "desc", _start: 1, _limit: 1 },
+          });
+          renderFeaturedCard(data[0]);
+        }
+
+        // 4) RECENT
+        if (Array.isArray(sections?.recent) && sections.recent.length) {
+          const list = await getByIds(sections.recent);
+          renderRecent(list);
+        } else {
+          const { data } = await api.get("/posts", {
+            params: { _sort: "date", _order: "desc", _limit: 4 },
+          });
+          renderRecent(data);
+        }
+        // 5) POPULAR
+        if (Array.isArray(sections?.popular) && sections.popular.length) {
+          const list = await getByIds(sections.popular);
+          renderPopular(list);
+        } else {
+          const { data } = await api.get("/posts", {
+            params: { _sort: "date", _order: "asc", _limit: 6 }, // Lấy 6 bài cũ nhất làm fallback
+          });
+          renderPopular(data);
+        }
+      }
+
+      initIndex();
+    </script>
   </body>
 </html>

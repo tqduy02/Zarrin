@@ -1,0 +1,98 @@
+{
+  "sections": {
+    "hero": 1,
+    "featured": 2,
+    "recent": [2, 3, 4, 5],
+    "popular": [6, 7, 8, 9, 10, 11]
+  },
+  "posts": [
+    {
+      "id": 1,
+      "title": "How AI will Change the Future",
+      "excerpt": "The future of AI will see home robots having enhanced intelligence, increased capabilities, and becoming more personal and possibly cute. For example, home robots will overcome navigation, direction",
+      "coverUrl": "assets/img/hero.jpg",
+      "category": "Technology",
+      "date": "2023-03-17"
+    },
+    {
+      "id": 2,
+      "title": "How to make a Game look more attractive with New VR & AI Technology",
+      "excerpt": "Google has been investing in AI for many years and bringing its benefits to individuals, businesses and communities. Whether it’s publishing state-of-the-art research...",
+      "coverUrl": "assets/img/blog1.jpg",
+      "category": "Development",
+      "date": "2023-03-16"
+    },
+    {
+      "id": 3,
+      "title": "8 Rules Of Travelling to See You Need To Know",
+      "excerpt": "Travelling in sea has many advantages. Some of the advantages of transporting goods by sea include: you can ship large volumes at costs",
+      "coverUrl": "assets/img/blog2.jpg",
+      "category": "Travel",
+      "date": "2023-03-13"
+    },
+    {
+      "id": 4,
+      "title": "How to build strong portfolio and get a Job in UI/UX",
+      "excerpt": "Capitalize on low hanging fruit to identify a ballpark value added activity to beta test. Override the digital divide with additional clickthroughs from",
+      "coverUrl": "assets/img/blog3.jpg",
+      "category": "Development",
+      "date": "2023-03-11"
+    },
+    {
+      "id": 5,
+      "title": "How to Be a Professional Footballer in 2023",
+      "excerpt": "Organically grow the holistic world view of disruptive innovation via workplace diversity and empowerment. survival strategies to ensure proactive",
+      "coverUrl": "assets/img/blog4.jpg",
+      "category": "Sport",
+      "date": "2023-03-10"
+    },
+    {
+      "id": 6,
+      "title": "Train Or Bus Journey? Which one suits?",
+      "excerpt": "The choice between a train or bus journey depends on various factors such as the distance of the journey, the time available, the cost, and person",
+      "coverUrl": "assets/img/pp1.jpg",
+      "category": "Travel",
+      "date": "2023-03-13"
+    },
+    {
+      "id": 7,
+      "title": "Best way to do research for your next project",
+      "excerpt": "Capitalize on low hanging fruit to identify a ballpark value added activity to beta test. Override the digital divide with additional clickthroughs",
+      "coverUrl": "assets/img/pp2.jpg",
+      "category": "Research",
+      "date": "2023-03-11"
+    },
+    {
+      "id": 8,
+      "title": "Best Base Gamer in 2023 with proper skills?",
+      "excerpt": "Organically grow the holistic world view of disruptive innovation via workplace diversity and empowerment. survival strategies to ensure proactive",
+      "coverUrl": "assets/img/pp3.jpg",
+      "category": "Sport",
+      "date": "2023-03-10"
+    },
+    {
+      "id": 9,
+      "title": "Who is the best singer on chart?Know him?",
+      "excerpt": "chart by Billboard which ranks the all-time greatest artists based on their performance on the weekly Billboard Hot 100 and",
+      "coverUrl": "assets/img/pp4.jpg",
+      "category": "Travel",
+      "date": "2023-03-13"
+    },
+    {
+      "id": 10,
+      "title": "How to start export import business from home?",
+      "excerpt": "Capitalize on low hanging fruit to identify a ballpark value added activity to beta test. Override the digital divide with additional clickthroughs",
+      "coverUrl": "assets/img/pp5.jpg",
+      "category": "Development",
+      "date": "2023-03-11"
+    },
+    {
+      "id": 11,
+      "title": "Make some drinks with chocolates chocolates and milk",
+      "excerpt": "Organically grow the holistic world view of disruptive innovation via workplace diversity and empowerment. survival strategies to ensure proactive",
+      "coverUrl": "assets/img/pp6.jpg",
+      "category": "Sport",
+      "date": "2023-03-10"
+    }
+  ]
+}
